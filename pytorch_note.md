@@ -44,3 +44,23 @@ torch.nn 的核心模块是 Module，它是一个抽象概念，既可以表示�
 - 修改最后一层，使得输出层与我们想要预测的种类数量相同
 - 定义优化算法，确定哪些参数在训练时需要修改。对不需要修改的参数调用`param.requires_grad=False`
 - 进行训练
+
+对于 inception 网络，有多个辅助输出(auxiliary output)，这些输出只对训练时的 loss 有用，对于 test 阶段，辅助输出可以忽略；并且在 `torchvision.models.inception_v3` 中，输入的批大小一定得大于1（resnet 等可以等于1）。**inception 在 train 模式下有两个 output（outputs, aux_outputs），而在 eval 模式下只有一个 output**
+
+我们认为 validation accuracy 最好的模型是 best performing model。
+
+**可以通过 `torch.set_grad_enable(phase=='train')` 来设置是否需要计算梯度**。`torch.no_grad()`等价于`torch.set_grad_enable(False)`, `torch.enable_grad()` 等价于 `torch.set_grad_enable(True)`。
+
+通过 dataloader 获取整个 dataset 的数据数量：`len(dataloader.dataset)`
+
+如果 `torch.tensor` 中只有一个元素，则 `{a:.2f}` 输出即为一个小数；
+
+对于小数据量，小分类类别，应该尽量选择简单的数据模型；
+
+分类模型中的两个特殊的模型：
+- `inception`: 两个输出（auxiliary output），输入为 (299, 299) 图片，并且**批大小必须大于1**；
+- `squeezenet`: 有一个参数 -- `num_classes`
+
+构造自定义模型时，使用 `torch.nn.Sequential` 在 forward 时，连接顺序是按照定义顺序进行的；
+
+如果在自定义模型中，多个变量引用同一个网络，那么`named_children/ named_modules/ named_parameters` 都只引用一个结构；
