@@ -64,3 +64,23 @@ torch.nn 的核心模块是 Module，它是一个抽象概念，既可以表示�
 构造自定义模型时，使用 `torch.nn.Sequential` 在 forward 时，连接顺序是按照定义顺序进行的；
 
 如果在自定义模型中，多个变量引用同一个网络，那么`named_children/ named_modules/ named_parameters` 都只引用一个结构；
+
+- `torchvision.transforms.RandomResizeCrop` 会对原图片进行缩放，缩放因子通过 `scale` 参数确定，`torchvision.transforms.RandomCrop` 不会对原图片进行缩放，只是截图而已；
+
+**从 python3.5 开始，`os.scandir(root)`，该函数会比`os.listdir`快很多；**
+
+**优化器、学习率的选择对模型训练非常重要，如果选择不好的话，模型可能会很难得到优化**
+
+## Spatial Transformer Network (STN)
+
+普通的 CNN 能够显式地学习平移不变性，以及隐式地学习旋转不变性。STN用于显示地学习图形空间上的变换不变性。
+
+## 注意力机制
+
+### Encoder-Decoder 框架
+
+大多数的注意力模型附着在 Encoder-Decoder 框架下。
+
+
+**Drop 层，如果是一个成员层（即有 `self.layer = torch.nn.Drop()`），则 通过 `model.eval()`，该层自动不再dropout，如果使用 `import torch.nn.functional F; F.drop`使用时，需要显示说明`F.drop(training=self.training)`**
+
